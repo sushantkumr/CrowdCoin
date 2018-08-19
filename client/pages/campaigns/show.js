@@ -17,7 +17,7 @@ class CampaignShow extends Component {
 		const campaign = Campaign(props.query.address);
 
 		const summary = await campaign.methods.getSummary().call();
-		//const campaignStatus = await campaign.methods.getCampaignStatus().call();
+		const campaignStatus = await campaign.methods.getCampaignStatus().call();
  
 		return {
 			nameOfCampaign: summary[0],

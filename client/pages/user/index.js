@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
-import factory from '../../lib/factory';
+import factory from '../lib/factory';
 import { Card, Button, Grid } from 'semantic-ui-react';
-import Layout from '../../components/Layout';
+import Layout from '../components/Layout';
+import { Link } from '../routes';
 
-class User extends Component {
+class CampaignIndex extends Component {
 
-	static async getInitialProps() {
-	    const accounts = await web3.eth.getAccounts();
+	static async getInitialProps() { 
 		const campaigns = await factory.methods
-		.getCampaigns(accounts[0], 0)
+		.getCampaigns("0x0000000000000000000000000000000000000000", 0)
 		.call();
-		
+
 		const completedCampaigns = (campaigns["completedCampaigns"]);
 		const ongoingCampaigns = (campaigns["ongoingCampaigns"]);
 
@@ -37,7 +37,11 @@ class User extends Component {
 		.map(address => {
 				return {
 					header: address,
-					description: <a>View Campaign</a>,
+					description: (
+							<Link route={`/campaigns/${address}`}>
+								<a>View Campaign</a>
+							</Link>
+							),
 					fluid: true
 				};				
 		});
@@ -48,8 +52,6 @@ class User extends Component {
 	render() {
 		return (
 			<Layout>
-			<h3>Your profile</h3>
-
 			<div>
 				<Grid columns={2} divided>
 					<Grid.Row>
@@ -61,9 +63,18 @@ class User extends Component {
 		    				</div>
 						</Grid.Column>
 
-						<Grid.Column floated="right" width={6}>
+						<Grid.Column floated="right" width={4}>
 			    			<div className="ui vertical buttons">
-				    			<Button floated="right" content='Create Campaign' icon='add circle' labelPosition='right' primary />
+			    				<Link route="/campaigns/new">
+			    					<a>
+					    				<Button floated="right" 
+					    						content="Create Campaign"
+					    						icon='add circle'
+					    						labelPosition='right'
+					    						primary 
+					    				/>
+			    					</a>
+			    				</Link>
 				    			<Button floated="right" content='Ongoing Campaigns' icon='hourglass start' labelPosition='right' />
 				    			<Button floated="right" content='Completed Campaigns' icon='hourglass end' labelPosition='right' />
 							</div>
