@@ -13,7 +13,6 @@ class RefundButton extends Component {
 	}
 
 	refund = async event => {
-		console.log('Refund');
 		event.preventDefault();
 		const campaign = Campaign(this.props.address);
 

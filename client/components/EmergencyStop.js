@@ -13,7 +13,6 @@ class EmergencyStop extends Component {
 	}
 
 	stop = async event => {
-		console.log('Stop');
 		event.preventDefault();
 		const campaign = Campaign(this.props.address);
 

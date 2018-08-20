@@ -14,18 +14,20 @@ class HeaderComponent extends Component {
 		this.setState({ account: accounts[0] });
 	}
 
-
 	render() {
 		return (
-			<Menu style={{ marginTop: '10px' }}>
-				<Link route="/">
-					<a className="item">CrowdCoin</a>
-				</Link>
-				<Menu.Menu position="right">
-					<Menu.Item name='user'>
-					Hello {this.state.account} !
-					</Menu.Item>
-				</Menu.Menu>
+			<Menu style={{ marginTop: '35px' }}>
+				<Menu.Item header>CrowdCoin</Menu.Item>
+				<Menu.Item link position="left">
+					<Link route="/">
+						<a color="black">Home</a>
+					</Link>
+				</Menu.Item>
+				<Menu.Item link position="right">
+					<Link route={`/user/${this.state.account}`}>
+						<a color="black">Hello {this.state.account} !</a>
+					</Link>
+				</Menu.Item>
 			</Menu>
 		);
 	}

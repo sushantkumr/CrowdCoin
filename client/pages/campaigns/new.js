@@ -44,9 +44,9 @@ class CampaignNew extends Component {
 	    	await factory.methods
 	    		.createCampaign(
 	    				this.state.name,
-	    				this.state.minimumContribution,
+	    				web3.utils.toWei(this.state.minimumContribution, 'ether'),
 	    				this.state.startDate.unix(),
-	    				this.state.goal,
+	    				web3.utils.toWei(this.state.goal, 'ether'),
 	    				this.state.details)
 	    		.send({
 	    			from: accounts[0]
@@ -80,8 +80,8 @@ class CampaignNew extends Component {
 
 						<Form.Field required >
 							<label>Minimum Contribution</label>
-							<Input placeholder='Minimum contribution for this Campaign' 
-								   label="wei"
+							<Input placeholder='Minimum contribution for this Campaign. Enter value in ETH' 
+								   label="ETH"
 								   labelPosition="right"
 								   value={this.state.minimumContribution}
 								   onChange={this.onFieldChange('minimumContribution').bind(this)}
@@ -106,8 +106,8 @@ class CampaignNew extends Component {
 
 						<Form.Field required >
 							<label>Goal</label>
-							<Input placeholder='Amount required for this Campaign' 
-								   label="wei" 
+							<Input placeholder='Amount required for this Campaign. Enter value in ETH' 
+								   label="ETH" 
 								   labelPosition="right"
 								   value={this.state.goal}
 								   onChange={this.onFieldChange('goal').bind(this)}

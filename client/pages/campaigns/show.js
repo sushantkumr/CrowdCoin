@@ -16,8 +16,8 @@ class CampaignShow extends Component {
 	static async getInitialProps(props) {
 		const campaign = Campaign(props.query.address);
 
-		const summary = await campaign.methods.getSummary().call();
 		const campaignStatus = await campaign.methods.getCampaignStatus().call();
+		const summary = await campaign.methods.getSummary().call();
  
 		return {
 			nameOfCampaign: summary[0],
@@ -32,8 +32,8 @@ class CampaignShow extends Component {
 			requestsCount: summary[9],
 			rating: summary[10],
 			backersCount: summary[11],
-			//paused: campaignStatus[0],
-			//refundFlag:campaignStatus[1],
+			paused: campaignStatus[0],
+			refundFlag:campaignStatus[1],
 			address: props.query.address
 		};
 	}

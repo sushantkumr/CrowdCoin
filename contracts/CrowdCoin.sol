@@ -73,7 +73,6 @@ contract CampaignFactory is Ownable, Pausable {
         return (ongoingCampaigns, completedCampaigns);
     }
 
-    // Check msg.sender logic
     function addToList(address user, uint creatorOrBacker, uint _deadline) public {
         CampaignStatus memory newAddition = CampaignStatus({addrOfCampaign: msg.sender, deadline: _deadline});
 
@@ -89,7 +88,6 @@ contract CampaignFactory is Ownable, Pausable {
         }
     }
 
-    // Check msg.sender logic
     function deleteFromList(address user) public {
         CampaignStatus[] storage listOfCampaigns = backersList[user];
 

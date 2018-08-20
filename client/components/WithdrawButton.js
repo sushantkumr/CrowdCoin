@@ -13,7 +13,6 @@ class WithdrawButton extends Component {
 	}
 
 	withdraw = async event => {
-		console.log('Withdraw');
 		event.preventDefault();
 		const campaign = Campaign(this.props.address);
 
