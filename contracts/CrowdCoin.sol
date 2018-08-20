@@ -7,7 +7,7 @@
  * the Campagin to approve the usage of the raised funds for various purposes.
  * Additional features include withdrawal before deadline, refund initiated by Campaign manager 
  * and rating of campaigns.
- * 
+ * Follows a Factory design pattern wherein the CampaignFactory creates instances of the Campaign
  */
 
 pragma solidity ^0.4.24;
@@ -51,7 +51,8 @@ contract CampaignFactory is Ownable, Pausable {
     * @dev To retrieve list of campaigns. Uses filterCampaigns() to filter
     * @param user Address of the user
     * @param code If 0 -> shows a general list.  1 -> Filters through campaign creators list.  2 -> Filters through campaign backers list  
-    * @return List of addresses of Ongoing and Completed Campaigns
+    * @return ongoingCampaigns List of addresses of Ongoing Campaigns
+    * @return completedCampaigns List of addresses of Completed Campaigns
     */
     function getCampaigns(address user, uint code) public view returns(address[] ongoingCampaigns, address[] completedCampaigns) {
         CampaignStatus[] memory listOfCampaigns;
@@ -74,7 +75,8 @@ contract CampaignFactory is Ownable, Pausable {
     /**
     * @dev Filters campaigns based on current block.timestamp into ongoing and completed
     * @param campaigns List of CampaignStatus from getCampaigns() to filtered upon
-    * @return List of addresses of Ongoing and Completed Campaigns
+    * @return ongoingCampaigns List of addresses of Ongoing Campaigns
+    * @return completedCampaigns List of addresses of Completed Campaigns
     */
     function filterCampaigns(CampaignStatus[] campaigns) internal view returns(address[] ongoingCampaigns, address[] completedCampaigns) {
         uint indexOfOngoing;
@@ -107,7 +109,6 @@ contract CampaignFactory is Ownable, Pausable {
     * @param user Address of user to be added to campaignCreatorsList/backersList
     * @param creatorOrBacker flag for a campaign creator/backer
     * @param _deadline Deadline of campaign acts as an additional parameter to filter for user profiles
-    * @return List of addresses of Ongoing and Completed Campaigns
     */
     function addToList(address user, uint creatorOrBacker, uint _deadline) public {
         CampaignStatus memory newAddition = CampaignStatus({addrOfCampaign: msg.sender, deadline: _deadline});
@@ -374,7 +375,7 @@ contract Campaign is Ownable, ReentrancyGuard, Pausable {
 
     /**
     * @dev Compute rating of the campaign after deadline
-    * @return
+    * @return uint The computed rating of the Campaign
     */
     function computeRating() public onlyOwner postDeadline returns (uint) {
         rating = ratingSum.div(ratersCount);
