@@ -209,7 +209,7 @@ contract Campaign is Ownable, ReentrancyGuard, Pausable {
         if(refundFlag) {
             amountWithdrawn = amountWithdrawn.div(amountRaised).mul(amountRemaining);
         }
-        
+
         else {
             amountRaised = amountRaised.sub(amountWithdrawn);
             amountRemaining = amountRemaining.sub(amountWithdrawn);

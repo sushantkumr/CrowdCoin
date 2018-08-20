@@ -37,7 +37,7 @@ class RefundButton extends Component {
 		return (
 			<Container>
 				<Segment basic>
-					<Button fluid loading={this.state.loading} floated="right" content="Refund" icon='minus circle' labelPosition='right' color='teal' onClick={this.refund}/>
+					<Button fluid loading={this.state.loading} floated="right" content="Refund" icon='undo' labelPosition='right' color='teal' onClick={this.refund}/>
 					<Divider hidden />
 				</Segment>
 					<Message error header="Oops !" hidden={!this.state.errorMessage || !this.state.successMessage} content={this.state.errorMessage || this.state.successMessage} />

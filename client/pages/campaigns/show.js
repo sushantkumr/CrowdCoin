@@ -13,6 +13,10 @@ import EmergencyStop from '../../components/EmergencyStop';
 
 class CampaignShow extends Component {
 
+	state = {
+    	accounts: ''
+  	};
+
 	static async getInitialProps(props) {
 		const campaign = Campaign(props.query.address);
 
@@ -36,6 +40,11 @@ class CampaignShow extends Component {
 			refundFlag:campaignStatus[1],
 			address: props.query.address
 		};
+	}
+
+	async componentDidMount() {
+		const accounts = await web3.eth.getAccounts();
+		this.setState({ accounts });
 	}
 
 	renderTable() {
@@ -99,8 +108,16 @@ class CampaignShow extends Component {
 						<Grid.Column width={6}>
 							<ContributeForm address={this.props.address}/>
 							<WithdrawButton address={this.props.address}/>
-							<RefundButton address={this.props.address}/>
-							<EmergencyStop address={this.props.address}/>
+							<div>
+								{
+									(this.state.accounts[0] == this.props.manager) ?
+									<div>
+										<RefundButton address={this.props.address}/>
+										<EmergencyStop address={this.props.address} paused={this.props.paused}/>
+									</div>
+									: null
+								}
+							</div>
 						</Grid.Column>
 					</Grid.Row>
 					<Grid.Row>
