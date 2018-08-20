@@ -1,5 +1,5 @@
 /**
- * @author Sushant Kumar <sshnt.kmr3@gmail.com>
+ * @author Sushant Kumar
  * @title CrowdCoin
  * @section DESCRIPTION
  * This smart contract is an implementation of Kickstarter using Solidity.
@@ -49,7 +49,7 @@ contract CampaignFactory is Ownable, Pausable {
 
     /**
     * @dev To retrieve list of campaigns. Uses filterCampaigns() to filter
-    * @param user Address of the user
+    * @param user address of the user
     * @param code If 0 -> shows a general list.  1 -> Filters through campaign creators list.  2 -> Filters through campaign backers list  
     * @return ongoingCampaigns List of addresses of Ongoing Campaigns
     * @return completedCampaigns List of addresses of Completed Campaigns
@@ -106,7 +106,7 @@ contract CampaignFactory is Ownable, Pausable {
 
     /**
     * @dev Adds user to the lists campaignCreatorsList and backersList for all campaigns created
-    * @param user Address of user to be added to campaignCreatorsList/backersList
+    * @param user address of user to be added to campaignCreatorsList/backersList
     * @param creatorOrBacker flag for a campaign creator/backer
     * @param _deadline Deadline of campaign acts as an additional parameter to filter for user profiles
     */
@@ -149,7 +149,7 @@ contract CampaignFactory is Ownable, Pausable {
 
     /**
     * @dev Deletes users from the lists backersList if a user withdrew their funds
-    * @param Address of the user
+    * @param user address of the user
     */
     function deleteFromList(address user) public {
         CampaignStatus[] storage listOfCampaigns = backersList[user];
@@ -340,7 +340,7 @@ contract Campaign is Ownable, ReentrancyGuard, Pausable {
 
     /**
     * @dev Retrieve summary of the Campaign
-    * @return
+    * @return Multiple parameters of the Campaign
     */
     function getSummary() public view returns(string, address, uint, uint, uint, string, uint, uint, uint, uint, uint, uint) {
         return(nameOfCampaign, manager, minimumContribution, deadline, goal, details, amountRaised, address(this).balance, backers[msg.sender], requests.length, rating, backersCount);
@@ -348,7 +348,8 @@ contract Campaign is Ownable, ReentrancyGuard, Pausable {
 
     /**
     * @dev Retrieve status of the Campaign
-    * @return
+    * @return bool If contract is paused or not
+    * @return bool If refundFlag has been activated or not
     */
     function getCampaignStatus() public view returns(bool, bool) {
         return(paused, refundFlag);
@@ -356,7 +357,7 @@ contract Campaign is Ownable, ReentrancyGuard, Pausable {
 
     /**
     * @dev Retrieve the number of Requests in the Campaign
-    * @return
+    * @return uint The number of requests
     */
     function getRequestsCount() public view returns (uint) {
         return requests.length;
