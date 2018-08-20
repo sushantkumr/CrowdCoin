@@ -242,9 +242,8 @@ contract Campaign is Ownable, ReentrancyGuard, Pausable {
     
     function approveRequest(uint index) public validBacker {
         Request storage request = requests[index];
-        
         require(!request.backers[msg.sender]);
-        
+
         request.backers[msg.sender] = true;
         request.backerCount = request.backerCount.add(1);
     }
