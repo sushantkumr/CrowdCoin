@@ -1,4 +1,14 @@
-// funding all-or-nothing
+/**
+ * @author Sushant Kumar <sshnt.kmr3@gmail.com>
+ * @title CrowdCoin
+ * @section DESCRIPTION
+ * This smart contract is an implementation of Kickstarter using Solidity.
+ * It is used to create Campaigns to raise funds and then request the backers of 
+ * the Campagin to approve the usage of the raised funds for various purposes.
+ * Additional features include withdrawal before deadline, refund initiated by Campaign manager 
+ * and rating of campaigns.
+ * 
+ */
 
 pragma solidity ^0.4.24;
 
@@ -21,7 +31,15 @@ contract CampaignFactory is Ownable, Pausable {
     mapping(address => CampaignStatus[]) public campaignCreatorsList;
     mapping(address => CampaignStatus[]) public backersList;
     CampaignStatus[] public deployedCampaigns;
-    
+
+    /**
+    * @dev Create a new Campaign with the required parameters
+    * @param name Name of the campaign
+    * @param minimum Minimum contribution for the campaign
+    * @param _deadline Deadline for the campaign
+    * @param _goal Funding goal of the campaign
+    * @param details Additional details for the campaign
+    */
     function createCampaign(string name, uint minimum, uint _deadline, uint _goal, string details) public whenNotPaused {
         address newCampaign = new Campaign(name, minimum, msg.sender, _deadline, _goal, details);
         CampaignStatus memory newAddition = CampaignStatus({addrOfCampaign: newCampaign, deadline: _deadline });
@@ -29,6 +47,12 @@ contract CampaignFactory is Ownable, Pausable {
         emit NewCampaign(newCampaign, name, minimum, msg.sender, _deadline, _goal, details);
     }
 
+    /**
+    * @dev To retrieve list of campaigns. Uses filterCampaigns() to filter
+    * @param user Address of the user
+    * @param code If 0 -> shows a general list.  1 -> Filters through campaign creators list.  2 -> Filters through campaign backers list  
+    * @return List of addresses of Ongoing and Completed Campaigns
+    */
     function getCampaigns(address user, uint code) public view returns(address[] ongoingCampaigns, address[] completedCampaigns) {
         CampaignStatus[] memory listOfCampaigns;
 
@@ -47,6 +71,11 @@ contract CampaignFactory is Ownable, Pausable {
         return(filterCampaigns(listOfCampaigns));
     }
 
+    /**
+    * @dev Filters campaigns based on current block.timestamp into ongoing and completed
+    * @param campaigns List of CampaignStatus from getCampaigns() to filtered upon
+    * @return List of addresses of Ongoing and Completed Campaigns
+    */
     function filterCampaigns(CampaignStatus[] campaigns) internal view returns(address[] ongoingCampaigns, address[] completedCampaigns) {
         uint indexOfOngoing;
         uint indexOfCompleted;
@@ -73,6 +102,13 @@ contract CampaignFactory is Ownable, Pausable {
         return (ongoingCampaigns, completedCampaigns);
     }
 
+    /**
+    * @dev Adds user to the lists campaignCreatorsList and backersList for all campaigns created
+    * @param user Address of user to be added to campaignCreatorsList/backersList
+    * @param creatorOrBacker flag for a campaign creator/backer
+    * @param _deadline Deadline of campaign acts as an additional parameter to filter for user profiles
+    * @return List of addresses of Ongoing and Completed Campaigns
+    */
     function addToList(address user, uint creatorOrBacker, uint _deadline) public {
         CampaignStatus memory newAddition = CampaignStatus({addrOfCampaign: msg.sender, deadline: _deadline});
         bool notPresent = true;
@@ -110,6 +146,10 @@ contract CampaignFactory is Ownable, Pausable {
         }
     }
 
+    /**
+    * @dev Deletes users from the lists backersList if a user withdrew their funds
+    * @param Address of the user
+    */
     function deleteFromList(address user) public {
         CampaignStatus[] storage listOfCampaigns = backersList[user];
 
@@ -120,7 +160,6 @@ contract CampaignFactory is Ownable, Pausable {
                 delete listOfCampaigns[index];
             }
         }
-
         backersList[user] = listOfCampaigns;
     }
 }
@@ -165,11 +204,25 @@ contract Campaign is Ownable, ReentrancyGuard, Pausable {
     event Withdrawal(address contributor, uint amount);
     event RequestFinalized(address recipient, uint value);
 
+    /**
+    * @dev Modifier to check if the backer has contributed
+    */
     modifier validBacker() {
         require(backers[msg.sender] > 0);
         _;
     }
-    
+
+    /**
+    * @dev Modifier to check if deadline has passed and the campaign has raised more than its goal
+    */
+    modifier postDeadline() {
+        require(block.timestamp > deadline && amountRaised > goal);
+        _;
+    }
+
+    /**
+    * @dev Constructor to create a Campaign
+    */
     constructor(string _name, uint _minimumContribution, address creator, uint _deadline, uint _goal, string _details) public {
 
         require(block.timestamp < _deadline);
@@ -188,6 +241,9 @@ contract Campaign is Ownable, ReentrancyGuard, Pausable {
         transferOwnership(creator);
     }
     
+    /**
+    * @dev Payable function recieve funds from backers
+    */
     function contribute() public payable whenNotPaused {
         require(msg.value > minimumContribution && block.timestamp <= deadline);
 
@@ -202,6 +258,9 @@ contract Campaign is Ownable, ReentrancyGuard, Pausable {
         emit Contribute(msg.sender, msg.value);
     }
 
+    /**
+    * @dev Function to withdraw funds from the campaign
+    */
     function withdraw() public validBacker nonReentrant {
         require(block.timestamp <= deadline || amountRaised < goal || refundFlag);
         uint amountWithdrawn  = backers[msg.sender];
@@ -220,10 +279,14 @@ contract Campaign is Ownable, ReentrancyGuard, Pausable {
         msg.sender.transfer(amountWithdrawn);
         emit Withdrawal(msg.sender, amountWithdrawn);
     }
-    
-    function createRequest(string description, uint value, address recipient) public onlyOwner whenNotPaused{
-        require(block.timestamp > deadline && amountRaised > goal);
 
+    /**
+    * @dev Create a request to utilize the funds raised
+    * @param description Description of the Request
+    * @param value Value in wei for the particular request
+    * @param recipient Recipient address of the request
+    */    
+    function createRequest(string description, uint value, address recipient) public onlyOwner postDeadline whenNotPaused{
         requestedAmount = requestedAmount.add(value);
         if(requestedAmount > amountRemaining) {
             revert();
@@ -239,7 +302,11 @@ contract Campaign is Ownable, ReentrancyGuard, Pausable {
         
         requests.push(newRequest);
     }
-    
+
+    /**
+    * @dev Backers of the campaign can approve the request
+    * @param index Index of the request for approval
+    */    
     function approveRequest(uint index) public validBacker {
         Request storage request = requests[index];
         require(!request.backers[msg.sender]);
@@ -247,7 +314,11 @@ contract Campaign is Ownable, ReentrancyGuard, Pausable {
         request.backers[msg.sender] = true;
         request.backerCount = request.backerCount.add(1);
     }
-    
+
+    /**
+    * @dev Finalizing the request for funds if more than 50% of the backers approve
+    * @param index Index of the request for approval
+    */    
     function finalizeRequest(uint index) public onlyOwner {
         Request storage request = requests[index];
         require(request.backerCount > (backersCount.div(2)));
@@ -259,40 +330,60 @@ contract Campaign is Ownable, ReentrancyGuard, Pausable {
         emit RequestFinalized(request.recipient, request.value);
     }
 
-    // If few requests have been processed the %age of contribution will be returned
-    function refundBackerFunds() public onlyOwner {
-        require(block.timestamp > deadline);
+    /**
+    * @dev Owner can activate the refund flag
+    */
+    function refundBackerFunds() public onlyOwner postDeadline {
         refundFlag = true;
     }
 
+    /**
+    * @dev Retrieve summary of the Campaign
+    * @return
+    */
     function getSummary() public view returns(string, address, uint, uint, uint, string, uint, uint, uint, uint, uint, uint) {
         return(nameOfCampaign, manager, minimumContribution, deadline, goal, details, amountRaised, address(this).balance, backers[msg.sender], requests.length, rating, backersCount);
     }
 
+    /**
+    * @dev Retrieve status of the Campaign
+    * @return
+    */
     function getCampaignStatus() public view returns(bool, bool) {
         return(paused, refundFlag);
     }
 
+    /**
+    * @dev Retrieve the number of Requests in the Campaign
+    * @return
+    */
     function getRequestsCount() public view returns (uint) {
         return requests.length;
     }
 
-    // Rating
-    function giveRating(uint _rating) public validBacker {
-        require(block.timestamp > deadline && amountRaised > goal);
+    /**
+    * @dev Store rating from a valid backer of the campaign
+    * @param _rating Rating ranges from 1 - 5
+    */
+    function giveRating(uint _rating) public validBacker postDeadline {
         require(ratingFrombackers[msg.sender] == 0);
         ratingFrombackers[msg.sender] = _rating;
         ratersCount = ratersCount.add(1);
         ratingSum = ratingSum.add(_rating);
     }
 
-    function computeRating() public onlyOwner returns (uint) {
-        require(block.timestamp > deadline);
+    /**
+    * @dev Compute rating of the campaign after deadline
+    * @return
+    */
+    function computeRating() public onlyOwner postDeadline returns (uint) {
         rating = ratingSum.div(ratersCount);
         return rating;
     }
 
-    // Send any ether received back to the sender
+    /**
+    * @dev payable fallback
+    */
     function () public payable {
         if (!msg.sender.send(msg.value)) {
             revert();
