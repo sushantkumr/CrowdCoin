@@ -75,16 +75,38 @@ contract CampaignFactory is Ownable, Pausable {
 
     function addToList(address user, uint creatorOrBacker, uint _deadline) public {
         CampaignStatus memory newAddition = CampaignStatus({addrOfCampaign: msg.sender, deadline: _deadline});
+        bool notPresent = true;
 
         if(creatorOrBacker == 1) {
             CampaignStatus[] storage creatorCampaigns = campaignCreatorsList[user];
-            creatorCampaigns.push(newAddition);
-            campaignCreatorsList[user] = creatorCampaigns;
+
+            for(uint i = 0; i < creatorCampaigns.length; i++) {
+                CampaignStatus memory campaignC = creatorCampaigns[i];
+                if(newAddition.addrOfCampaign == campaignC.addrOfCampaign) {
+                    notPresent = false;
+                }
+            }
+
+            if(notPresent == true) {
+                creatorCampaigns.push(newAddition);
+                campaignCreatorsList[user] = creatorCampaigns;                
+            }
         }
+
         else if(creatorOrBacker == 2) {
             CampaignStatus[] storage backerCampaigns = backersList[user];
-            backerCampaigns.push(newAddition);
-            backersList[user] = backerCampaigns;
+
+            for(uint j = 0; j < backerCampaigns.length; j++) {
+                CampaignStatus memory campaignB = backerCampaigns[j];
+                if(newAddition.addrOfCampaign == campaignB.addrOfCampaign) {
+                    notPresent = false;
+                }
+            }
+
+            if(notPresent == true) {
+                backerCampaigns.push(newAddition);
+                backersList[user] = backerCampaigns;
+            }
         }
     }
 

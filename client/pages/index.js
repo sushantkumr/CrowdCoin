@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import factory from '../lib/factory';
-import { Card, Button, Grid } from 'semantic-ui-react';
+import { Card, Button, Grid, Divider } from 'semantic-ui-react';
 import Layout from '../components/Layout';
 import { Link } from '../routes';
 
@@ -92,6 +92,7 @@ class CampaignIndex extends Component {
 		return (
 			<Layout>
 			<div>
+				<Divider hidden />
 				<Grid columns={2} divided>
 					<Grid.Row>
 						<Grid.Column floated="left" width={8}>

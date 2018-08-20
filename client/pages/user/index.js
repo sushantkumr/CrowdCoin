@@ -3,6 +3,7 @@ import factory from '../../lib/factory';
 import { Card, Button, Grid, Container, Divider, Segment , Menu } from 'semantic-ui-react';
 import Layout from '../../components/Layout';
 import { Link } from '../../routes';
+import web3 from '../../lib/web3';
 
 class UserIndex extends Component {
 
@@ -12,71 +13,103 @@ class UserIndex extends Component {
       		showOngoing: true,
       		showCompleted: false,
       		activeItem: 'campaignCreator',
+      		accounts: [],
+      		creatorCompleted: [],
+      		creatorOngoing: [],
+      		backerCompleted: [],
+      		backerOngoing: [],
     	};
     	this.ongoingClicked = this.ongoingClicked.bind(this);
     	this.completedClicked = this.completedClicked.bind(this);
   	}
 
-	static async getInitialProps() {
-
+	async componentDidMount() {
 		const accounts = await web3.eth.getAccounts();
-		const campaigns = await factory.methods
-		.getCampaigns("0x0000000000000000000000000000000000000000", 0)
+		this.setState({ accounts });
+
+		const campaignCreatorList = await factory.methods
+		.getCampaigns(accounts[0] , 1)
 		.call();
 
-		const completedCampaigns = (campaigns["completedCampaigns"]);
-		const ongoingCampaigns = (campaigns["ongoingCampaigns"]);
+		const campaignBackerList = await factory.methods
+		.getCampaigns(accounts[0] , 2)
+		.call();
 
-		return { completedCampaigns, ongoingCampaigns };
+		this.setState({creatorCompleted: (campaignCreatorList["completedCampaigns"])});
+		this.setState({creatorOngoing: (campaignCreatorList["ongoingCampaigns"])});
+
+		this.setState({backerCompleted: (campaignBackerList["completedCampaigns"])});
+		this.setState({backerOngoing: (campaignBackerList["ongoingCampaigns"])});
 	}
+
+
+	renderCampaigns(props) {
+		let items;
+
+		if (typeof props !== 'undefined' && props.length > 0) {
+			items = props
+			.filter(address => address != "0x0000000000000000000000000000000000000000")
+			.map(address => {
+					return {
+						header: address,
+						description: (
+								<Link route={`/campaigns/${address}`}>
+									<a>View Campaign</a>
+								</Link>
+								),
+						fluid: true
+					};				
+			});			
+		}
+
+		return (
+				<div>
+					<Card.Group items={items} />
+				</div>
+				);
+	}
+
+  	campaignListCompute(choice) {
+  		if(this.state.activeItem === 'campaignCreator') {
+  			if (choice == 1) {
+  				return (
+  					<div>
+  						<h3>Ongoing Campaigns</h3>
+  						{this.renderCampaigns(this.state.creatorOngoing)}
+  					</div>
+				);
+  			}
+  			else {
+  				return (
+  					<div>
+  						<h3>Completed Campaigns</h3>
+  						{this.renderCampaigns(this.state.creatorCompleted)}
+  					</div>
+				);
+  			}
+  		}
+
+  		else {
+  			if (choice == 1) {
+  				return (
+  					<div>
+  						<h3>Ongoing Campaigns</h3>
+  						{this.renderCampaigns(this.state.backerOngoing)}
+  					</div>
+				);
+  			}
+  			else {
+  				return (
+  					<div>
+  						<h3>Completed Campaigns</h3>
+  						{this.renderCampaigns(this.state.backerCompleted)}
+  					</div>
+				);
+  			}
+  		}
+  	}
 
   	handleItemClick = (e, { name }) => this.setState({ activeItem: name })
-
-	renderCompletedCampaigns() {
-		const items = this.props.completedCampaigns
-		.filter(address => address != "0x0000000000000000000000000000000000000000")
-		.map(address => {
-				return {
-					header: address,
-					description: (
-							<Link route={`/campaigns/${address}`}>
-								<a>View Campaign</a>
-							</Link>
-							),
-					fluid: true
-				};				
-		});
-
-		return (
-				<div>
-					<h3>Completed Campaigns</h3>
-					<Card.Group items={items} />
-				</div>
-				);
-	}
-
-	renderOngoingCampaigns() {
-		const items = this.props.ongoingCampaigns
-		.filter(address => address != "0x0000000000000000000000000000000000000000")
-		.map(address => {
-				return {
-					header: address,
-					description: (
-							<Link route={`/campaigns/${address}`}>
-								<a>View Campaign</a>
-							</Link>
-							),
-					fluid: true
-				};				
-		});
-
-		return (
-				<div>
-					<h3>Ongoing Campaigns</h3>
-					<Card.Group items={items} />
-				</div>
-				);
-	}
 
   	ongoingClicked() {
     	this.setState({
@@ -98,8 +131,7 @@ class UserIndex extends Component {
 			<Layout>
 			<div>
 				<Divider hidden />
-				<h3>User Profile</h3>
-				<Divider hidden />
+				<h2>User Profile</h2>
 
 				<Menu secondary>
 					<Menu.Item
@@ -113,8 +145,6 @@ class UserIndex extends Component {
 					  onClick={this.handleItemClick}
 					/>
 				</Menu>
-
-				<Divider hidden />
 				<Divider hidden />
 
 				<Grid columns={2} divided>
@@ -123,14 +153,14 @@ class UserIndex extends Component {
 		    				<div>
 		    					{
 		    						this.state.showOngoing ?
-		    							<div> {this.renderOngoingCampaigns()} </div>
+		    							<div> {this.campaignListCompute(1)} </div>
     								: null
        							}
 		    				</div>
 		    				<div>
 		    					{
 		    						this.state.showCompleted ?
-		    							<div> {this.renderCompletedCampaigns()} </div>
+		    							<div> {this.campaignListCompute(2)} </div>
     								: null
        							}
 		    				</div>
