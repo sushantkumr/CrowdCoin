@@ -214,7 +214,7 @@ contract Campaign is Ownable, ReentrancyGuard, Pausable {
     }
 
     /**
-    * @dev Modifier to check if deadline has passed and the campaign has raised more than its goal
+    * @dev Modifier to check if deadline has passed and the campaign has reached its goal
     */
     modifier postDeadline() {
         require(block.timestamp > deadline && amountRaised > goal);

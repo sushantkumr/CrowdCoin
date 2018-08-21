@@ -14,7 +14,7 @@ module.exports = {
     //
     // https://github.com/trufflesuite/truffle/releases/tag/v4.0.0
     optimizer: {
-      enabled: true,
+      enabled: false,
       runs: 200
     }
   }

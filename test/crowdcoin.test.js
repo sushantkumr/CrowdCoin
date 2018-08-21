@@ -1,12 +1,13 @@
 const CampaignFactory = artifacts.require("./CampaignFactory");
 const Campaign = artifacts.require("./Campaign");
 
-/*var lolex = require("lolex");
-var clock = lolex.install({now: Date.now()});*/
-
 contract('Testing CrowdCoin', async (accounts) => {
 
 	let factory;
+
+	function timeout(ms) {
+	    return new Promise(resolve => setTimeout(resolve, ms));
+	}
 
 	// To deploy a fresh contract after every new test
 	beforeEach(async () => {
@@ -18,57 +19,76 @@ contract('Testing CrowdCoin', async (accounts) => {
   });
 
     it("Create a new Campaign", async () => {
-    	await factory
+    	let eventDetails = await factory
     	.createCampaign(
     		"Laptop bags",10000000,1633212241,100000000,"Create Macbook laptop bags",
     		{
 				from: accounts[0]
 			});
 
-		const deployedCampaign = await factory.deployedCampaigns(0);
-		assert.equal(1633212241, deployedCampaign[1].toNumber());
+    	addressFromEvent = eventDetails['logs'][1]['args']['campaignAddress'];
+		let deployedCampaign = await factory.deployedCampaigns(0);
+		deployedCampaign = deployedCampaign[0];
+		assert.equal(addressFromEvent, deployedCampaign);
   });
 
-    it("Getting ongoing Campaigns", async () => {
-    	await factory
+    it("Get ongoing Campaigns", async () => {
+    	let eventDetails = await factory
     	.createCampaign(
-    		"Laptop bags",10000000,1633212241,100000000,"Create Macbook laptop bags",
-    		{
-				from: accounts[0]
-			});
+    		"Laptop bags",10000000,1633212241,100000000,"Create Macbook laptop bags");
 
-    	await factory
+    	addressFromEvent1 = eventDetails['logs'][1]['args']['campaignAddress'];
+
+    	eventDetails = await factory
     	.createCampaign(
-    		"Water filtering bottles", 10000000, 1733212241, 100000000000, "Create water filtering bottles",
-    		{
-				from: accounts[0]
-			});
+    		"Water filtering bottles", 10000000, 1733212241, 100000000000, "Create water filtering bottles");
 
-		const deployedCampaigns = await factory.getOngoingCampaigns();
-		assert.equal(2, deployedCampaigns.length);
+    	addressFromEvent2 = eventDetails['logs'][1]['args']['campaignAddress'];
+
+		let deployedCampaigns = await factory.getCampaigns('0x0000000000000000000000000000000000000000', 0);
+		deployedCampaigns = deployedCampaigns[0];
+		assert.equal(addressFromEvent1, deployedCampaigns[0]);
+		assert.equal(addressFromEvent2, deployedCampaigns[1]);
   });
 
-/*    it("Getting completed Campaigns", async () => {
+    it("Get completed Campaigns", async () => {
 
-		var seconds = Math.round(Date.now() / 1000);
+		var deadLine = Math.round(Date.now() / 1000) + 2;
 
-    	await factory
+    	let eventDetails = await factory
     	.createCampaign(
-    		"Laptop bags", 10000000, seconds + 2, 100000000000, "Create Macbook laptop bags",
-    		{
-				from: accounts[0]
-			});
+    		"Laptop bags", 10000000, deadLine, 100000000000, "Create Macbook laptop bags");
 
-    	
-		var seconds = Math.round(Date.now() / 1000);
-		console.log(seconds);
-		let completedCampaigns;
+    	addressFromEvent1 = eventDetails['logs'][1]['args']['campaignAddress'];
 
-		setTimeout(function() {
-				const completedCampaigns = await factory.getCompletedCampaigns();
-			}, 5000);
-		assert.notEqual('0x0000000000000000000000000000000000000000', completedCampaigns[0]);
+		eventDetails = await factory
+    	.createCampaign(
+    		"Water filtering bottles", 10000000, deadLine, 100000000000, "Create water filtering bottles");
 
-  });*/
+    	addressFromEvent2 = eventDetails['logs'][1]['args']['campaignAddress'];
+
+    	// To cause some delay and lapse the deadline of the created campaigns
+		await timeout(4000);
+
+		let deployedCampaigns = await factory.getCampaigns('0x0000000000000000000000000000000000000000', 0);
+		await (deployedCampaigns = deployedCampaigns[1]);
+		await assert.equal(addressFromEvent1, deployedCampaigns[0]);
+		await assert.equal(addressFromEvent2, deployedCampaigns[1]);
+  });
+
+    it("Contribute to a Campaign", async () => {
+
+		var deadLine = Math.round(Date.now() / 1000) + 2;
+
+    	let eventDetails = await factory
+    	.createCampaign(
+    		"Laptop bags", 10000000, deadLine, 100000000000, "Create Macbook laptop bags");
+
+    	addressFromEvent = eventDetails['logs'][1]['args']['campaignAddress'];
+
+    	campaign = await new web3.eth.Contract(Campaign.abi, addressFromEvent);
+
+ 		assert.ok(campaign.address);
+  });
 
 });
