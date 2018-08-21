@@ -83,12 +83,18 @@ contract('Testing CrowdCoin', async (accounts) => {
     	let eventDetails = await factory
     	.createCampaign(
     		"Laptop bags", 10000000, deadLine, 100000000000, "Create Macbook laptop bags");
-
     	addressFromEvent = eventDetails['logs'][1]['args']['campaignAddress'];
 
-    	campaign = await new web3.eth.Contract(Campaign.abi, addressFromEvent);
+    	campaign = await Campaign.at(addressFromEvent);
+    	//console.log(campaign);
+    	await campaign.contribute({
+    		from: accounts[0],
+    		value: 10000000000000000,
+    	});
 
- 		assert.ok(campaign.address);
+    	let balance = await campaign.amountRaised.call()
+    	balance = balance.toNumber();
+    	assert(balance, 10000000000000000);
   });
 
 });
