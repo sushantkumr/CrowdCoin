@@ -255,7 +255,12 @@ contract Campaign is Ownable, ReentrancyGuard, Pausable {
     * @dev Payable function recieve funds from backers
     */
     function contribute() public payable whenNotPaused nonReentrant {
-        require(msg.value > minimumContribution && block.timestamp <= deadline && amountRaised <= MAX_LIMIT_FOR_CONTRIB);
+        require(msg.value > minimumContribution && block.timestamp <= deadline);
+        uint checkAmount = amountRaised.add(msg.value);
+
+        if(checkAmount > MAX_LIMIT_FOR_CONTRIB) {
+            revert();
+        }
 
         if(backers[msg.sender] == 0) {
             backersCount = backersCount.add(1);            
@@ -273,11 +278,11 @@ contract Campaign is Ownable, ReentrancyGuard, Pausable {
     */
     function withdraw() external validBacker nonReentrant {
         require(block.timestamp <= deadline || amountRaised < goal || refundFlag);
-        uint amountWithdrawn  = backers[msg.sender];
+        uint amountWithdrawn = backers[msg.sender];
         backers[msg.sender] = 0;
 
         if(refundFlag) {
-            amountWithdrawn = amountWithdrawn.div(amountRaised).mul(amountRemaining);
+            amountWithdrawn = amountWithdrawn.mul(amountRemaining).div(amountRaised);
         }
 
         else {
@@ -298,6 +303,7 @@ contract Campaign is Ownable, ReentrancyGuard, Pausable {
     * @param recipient Recipient address of the request
     */    
     function createRequest(string description, uint value, address recipient) public onlyOwner postDeadline whenNotPaused{
+        require(!refundFlag);
         requestedAmount = requestedAmount.add(value);
         if(requestedAmount > amountRemaining) {
             revert();
@@ -337,6 +343,7 @@ contract Campaign is Ownable, ReentrancyGuard, Pausable {
         
         request.recipient.transfer(request.value);
         amountRemaining = amountRemaining.sub(request.value);
+        requestedAmount = requestedAmount.sub(request.value);
         request.complete = true;
         emit RequestFinalized(request.recipient, request.value);
     }
@@ -382,15 +389,7 @@ contract Campaign is Ownable, ReentrancyGuard, Pausable {
         ratingFrombackers[msg.sender] = _rating;
         ratersCount = ratersCount.add(1);
         ratingSum = ratingSum.add(_rating);
-    }
-
-    /**
-    * @dev Compute rating of the campaign after deadline
-    * @return uint The computed rating of the Campaign
-    */
-    function computeRating() public onlyOwner postDeadline returns (uint) {
         rating = ratingSum.div(ratersCount);
-        return rating;
     }
 
     /**

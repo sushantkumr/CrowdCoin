@@ -6,9 +6,9 @@ Backers can be assured that the money they contribute is used for the right purp
 
 ## Prerequisites
 
-* If you wish to maintain the VM via [Vagrant](https://www.vagrantup.com/downloads.html)
-* [To setup a Virtual Machine in Vagrant and install dependancies of this repo](https://gist.github.com/sushantkumr/3fe3cb3507a3d25eeed237065f5ef46e)
-* [MetaMask](https://metamask.io/)
+* If you wish to maintain the VM via [Vagrant](https://www.vagrantup.com/downloads.html). [To setup a Virtual Machine in Vagrant and install dependancies of this repo](https://gist.github.com/sushantkumr/3fe3cb3507a3d25eeed237065f5ef46e)
+* [MetaMask](https://metamask.io/). Procure some Rinkeby test ETH from the faucet.
+* Switch to Rinkeby network in Metamask.
 
 ## How to set it up
 * Clone the repo in your local fill system

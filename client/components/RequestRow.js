@@ -1,27 +1,50 @@
 import React, { Component } from 'react';
 import { Table, Button } from 'semantic-ui-react';
-import web3 from '../lib/web3';
 import Campaign from '../lib/campaign';
+import web3 from '../lib/web3';
+import { Router } from '../routes';
 
 class RequestRow extends Component {
 
-	onApprove = async () => {
-		const campaign = Campaign(this.props.address);
-		const accounts = await web3.eth.getAccounts();
-		await campaign.methods.approveRequest(this.props.id).send({
-			from:accounts[0]
-		});
-		Router.replaceRoute(`/campaigns/${this.props.address}/requests`)
+	state = {
+		errorMessageApprove: '',
+		loadingApprove: false,
+		errorMessageFinalize: '',
+		loadingFinalize: false,
+	}	
 
+	onApprove = async () => {
+		this.setState({ loadingApprove: true, errorMessageApprove: ''});
+
+		try {
+			const campaign = Campaign(this.props.address);
+			const accounts = await web3.eth.getAccounts();
+			await campaign.methods.approveRequest(this.props.id).send({
+				from:accounts[0]
+			});
+		} catch(err) {
+			this.setState({ errorMessageApprove: err.message});
+		}
+
+		this.setState({ loadingApprove: false });
+		Router.replaceRoute(`/campaigns/${this.props.address}/requests`);			
 	};
 
 	onFinalize = async () => {
-		const campaign = Campaign(this.props.address);
-		const accounts = await web3.eth.getAccounts();
-		await campaign.methods.finalizeRequest(this.props.id).send({
-			from:accounts[0]
-		});
-		Router.replaceRoute(`/campaigns/${this.props.address}.requests`)
+		this.setState({ loadingFinalize: true, errorMessageFinalize: ''});
+
+		try {
+			const campaign = Campaign(this.props.address);
+			const accounts = await web3.eth.getAccounts();
+			await campaign.methods.finalizeRequest(this.props.id).send({
+				from:accounts[0]
+			});
+		} catch(err) {
+			this.setState({ errorMessageFinalize: err.message});
+		}
+
+		this.setState({ loadingFinalize: false });
+		Router.replaceRoute(`/campaigns/${this.props.address}.requests`);
 	};
 
 	render() {
@@ -38,12 +61,12 @@ class RequestRow extends Component {
 				<Cell>{request.backerCount}/{backersCount}</Cell>
 				<Cell>
 				{request.complete ? null : (
-					<Button color='green' onClick={this.onApprove}>Approve</Button>
+					<Button color='green' onClick={this.onApprove} loading={this.state.loadingApprove}>Approve</Button>
 				)}
 				</Cell>
 				<Cell>
 				{request.complete ? null : (
-					<Button disabled={!readyToFinalize} color='teal' onClick={this.onFinalize}>Finalize</Button>
+					<Button disabled={!readyToFinalize} color='teal' onClick={this.onFinalize} loading={this.state.loadingFinalize}>Finalize</Button>
 				)}
 				</Cell>
 			</Row>
