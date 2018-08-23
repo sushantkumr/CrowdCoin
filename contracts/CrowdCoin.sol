@@ -118,8 +118,8 @@ contract CampaignFactory is Ownable, Pausable {
             CampaignStatus[] storage creatorCampaigns = campaignCreatorsList[user];
 
             for(uint i = 0; i < creatorCampaigns.length; i++) {
-                CampaignStatus memory campaignC = creatorCampaigns[i];
-                if(newAddition.addrOfCampaign == campaignC.addrOfCampaign) {
+                CampaignStatus memory tempCampaign = creatorCampaigns[i];
+                if(newAddition.addrOfCampaign == tempCampaign.addrOfCampaign) {
                     notPresent = false;
                 }
             }
@@ -134,8 +134,8 @@ contract CampaignFactory is Ownable, Pausable {
             CampaignStatus[] storage backerCampaigns = backersList[user];
 
             for(uint j = 0; j < backerCampaigns.length; j++) {
-                CampaignStatus memory campaignB = backerCampaigns[j];
-                if(newAddition.addrOfCampaign == campaignB.addrOfCampaign) {
+                CampaignStatus memory tempoCampaign = backerCampaigns[j];
+                if(newAddition.addrOfCampaign == tempoCampaign.addrOfCampaign) {
                     notPresent = false;
                 }
             }
