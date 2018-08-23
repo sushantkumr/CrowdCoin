@@ -148,7 +148,7 @@ contract CampaignFactory is Ownable, Pausable {
     }
 
     /**
-    * @dev Deletes users from the lists backersList if a user withdrew their funds
+    * @dev Deletes users from the list backersList if a user withdrew their funds
     * @param user address of the user
     */
     function deleteFromList(address user) public {
@@ -165,6 +165,11 @@ contract CampaignFactory is Ownable, Pausable {
     }
 }
 
+
+/**
+* Campaign contract created for every new campaign, by invoking the createCampaign(args..)
+* in CampaignFactory. Caller of createCamapign will be the manager of the Campign instance.
+*/
 
 contract Campaign is Ownable, ReentrancyGuard, Pausable {
 
