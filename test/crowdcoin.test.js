@@ -32,6 +32,21 @@ contract('Testing CrowdCoin', async (accounts) => {
 		assert.equal(addressFromEvent, deployedCampaign);
   });
 
+	it('Caller as a campaign manager', async () => {
+		let eventDetails = await factory
+    	.createCampaign(
+    		"Laptop bags",10000000,1633212241,100000000,"Create Macbook laptop bags",
+    		{
+				from: accounts[0]
+			});
+
+    	addressFromEvent1 = eventDetails['logs'][1]['args']['campaignAddress'];
+    	campaign = await Campaign.at(addressFromEvent);
+
+		const manager = await campaign.manager.call();
+		assert.equal(accounts[0], manager);
+	});
+
     it("Get ongoing Campaigns", async () => {
     	let eventDetails = await factory
     	.createCampaign(
@@ -52,7 +67,6 @@ contract('Testing CrowdCoin', async (accounts) => {
   });
 
     it("Get completed Campaigns", async () => {
-
 		var deadLine = Math.round(Date.now() / 1000) + 2;
 
     	let eventDetails = await factory
@@ -76,8 +90,7 @@ contract('Testing CrowdCoin', async (accounts) => {
 		await assert.equal(addressFromEvent2, deployedCampaigns[1]);
   });
 
-    it("Contribute to a Campaign", async () => {
-
+    it("Allows people to contribute to Campaigns and marks them as contributor", async () => {
 		var deadLine = Math.round(Date.now() / 1000) + 2;
 
     	let eventDetails = await factory
@@ -86,7 +99,6 @@ contract('Testing CrowdCoin', async (accounts) => {
     	addressFromEvent = eventDetails['logs'][1]['args']['campaignAddress'];
 
     	campaign = await Campaign.at(addressFromEvent);
-    	//console.log(campaign);
     	await campaign.contribute({
     		from: accounts[0],
     		value: 10000000000000000,
@@ -96,5 +108,184 @@ contract('Testing CrowdCoin', async (accounts) => {
     	balance = balance.toNumber();
     	assert(balance, 10000000000000000);
   });
+
+	it('Camaigns require a minimum contribution', async () => {
+		try {
+			var deadLine = Math.round(Date.now() / 1000) + 2;
+
+	    	let eventDetails = await factory
+	    	.createCampaign(
+	    		"Laptop bags", 10000000, deadLine, 100000000000, "Create Macbook laptop bags");
+	    	addressFromEvent = eventDetails['logs'][1]['args']['campaignAddress'];
+
+	    	campaign = await Campaign.at(addressFromEvent);
+	    	await campaign.contribute({
+	    		from: accounts[0],
+	    		value: 1000000,
+	    	});
+
+	    	assert(false);
+		} catch (err) {
+				assert(err);
+		}
+	});
+
+	it('Allows a manager to create a payment request', async () => {
+		var deadLine = Math.round(Date.now() / 1000) + 2;
+
+    	let eventDetails = await factory
+    	.createCampaign(
+    		"Laptop bags", 10000000, deadLine, 100000000000, "Create Macbook laptop bags");
+    	addressFromEvent = eventDetails['logs'][1]['args']['campaignAddress'];
+
+    	campaign = await Campaign.at(addressFromEvent);
+    	await campaign.contribute({
+    		from: accounts[0],
+    		value: 100000000000000000,
+    	});
+
+		await timeout(4000);
+
+    	await campaign.createRequest('Buy batteries', '10000000000', accounts[1]);
+		const request = await campaign.requests(0);
+		assert.equal('Buy batteries', request[0]);
+	});
+
+	it('Processes requests', async () => {
+		var deadLine = Math.round(Date.now() / 1000) + 2;
+
+		let eventDetails = await factory.createCampaign(
+	    		"Laptop bags", 10000000, deadLine, 100000000000, "Create Macbook laptop bags");
+    	addressFromEvent = eventDetails['logs'][1]['args']['campaignAddress'];
+
+    	campaign = await Campaign.at(addressFromEvent);
+    	await campaign.contribute({
+    		from: accounts[0],
+    		value: web3.toWei('10', 'ether',)
+    	});
+
+		await timeout(4000);
+
+    	await campaign.createRequest('Buy batteries', web3.toWei('5', 'ether'), accounts[1]);
+		const request = await campaign.requests(0);
+		await campaign.approveRequest(0);
+		await campaign.finalizeRequest(0);
+
+		let balance = await web3.eth.getBalance(accounts[1]);
+		balance = web3.fromWei(balance, 'ether');
+		balance = parseFloat(balance); 
+		assert(balance > 104);
+
+	});
+
+	it('Withdrawal from a Campaign is allowed', async () => {
+    	let initialBalance = await web3.eth.getBalance(accounts[0]);
+		initialBalance = web3.fromWei(initialBalance, 'ether');
+		initialBalance = parseFloat(initialBalance);
+
+		var deadLine = Math.round(Date.now() / 1000) + 2;
+		let eventDetails = await factory.createCampaign(
+	    		"Laptop bags", 10000000, deadLine, 100000000000, "Create Macbook laptop bags");
+    	addressFromEvent = eventDetails['logs'][1]['args']['campaignAddress'];
+    	campaign = await Campaign.at(addressFromEvent);
+    	await campaign.contribute({
+    		from: accounts[0],
+    		value: web3.toWei('10', 'ether',)
+    	});
+
+    	await campaign.withdraw();
+    	let finalBalance = await web3.eth.getBalance(accounts[0]);
+		finalBalance = web3.fromWei(finalBalance, 'ether');
+		finalBalance = parseFloat(finalBalance);
+		assert(finalBalance > (initialBalance - 0.3)); // Assuming 0.3 is burnt in gas
+	});
+
+	it('Prevent contribution after deadline passes', async () => {
+    	try {
+			var deadLine = Math.round(Date.now() / 1000) + 2;
+
+	    	let eventDetails = await factory
+	    	.createCampaign(
+	    		"Laptop bags", 10000000, deadLine, 100000000000, "Create Macbook laptop bags");
+	    	addressFromEvent = eventDetails['logs'][1]['args']['campaignAddress'];
+
+	    	campaign = await Campaign.at(addressFromEvent);
+
+			await timeout(4000);
+
+	    	await campaign.contribute({
+	    		from: accounts[0],
+	    		value: 100000000000,
+	    	});
+
+	    	assert(false);
+		} catch (err) {
+				assert(err);
+		}
+
+	});
+
+	it('Prevent creation of requests if goal is not reached', async () => {
+		try {
+			var deadLine = Math.round(Date.now() / 1000) + 2;
+
+	    	let eventDetails = await factory
+	    	.createCampaign(
+	    		"Laptop bags", 10000000, deadLine, 100000000000, "Create Macbook laptop bags");
+	    	addressFromEvent = eventDetails['logs'][1]['args']['campaignAddress'];
+
+	    	campaign = await Campaign.at(addressFromEvent);
+	    	await campaign.contribute({
+	    		from: accounts[0],
+	    		value: 10000000000,
+	    	});
+
+			await timeout(4000);
+
+	    	await campaign.createRequest('Buy batteries', '10000000000', accounts[1]);
+	    	assert(false);
+		} catch (err) {
+			assert(err)
+		}
+	});
+
+	it('Refund after deadline crosses', async () => {
+    	let initialBalance = await web3.eth.getBalance(accounts[0]);
+		initialBalance = web3.fromWei(initialBalance, 'ether');
+		initialBalance = parseFloat(initialBalance);
+
+		var deadLine = Math.round(Date.now() / 1000) + 2;
+
+		let eventDetails = await factory.createCampaign(
+	    		"Laptop bags", 10000000, deadLine, 100000000000, "Create Macbook laptop bags");
+    	addressFromEvent = eventDetails['logs'][1]['args']['campaignAddress'];
+
+    	campaign = await Campaign.at(addressFromEvent);
+    	await campaign.contribute({
+    		from: accounts[0],
+    		value: web3.toWei('10', 'ether',)
+    	});
+
+		await timeout(4000);
+
+		await campaign.refundBackerFunds();
+    	await campaign.withdraw();
+    	let finalBalance = await web3.eth.getBalance(accounts[0]);
+		finalBalance = web3.fromWei(finalBalance, 'ether');
+		finalBalance = parseFloat(finalBalance);
+		assert(finalBalance > (initialBalance - 0.3)); // Assuming 0.3 is burnt in gas
+	});
+
+	it('Prevent creation of campaigns after Circuit breaker activated on Factory ', async () => {
+		try {
+			await factory.pause();
+			var deadLine = Math.round(Date.now() / 1000) + 2;
+			let eventDetails = await factory.createCampaign(
+		    		"Laptop bags", 10000000, deadLine, 100000000000, "Create Macbook laptop bags");
+			assert(false);			
+		} catch(err) {
+			assert(err);
+		}
+	});
 
 });

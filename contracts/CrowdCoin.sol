@@ -195,7 +195,11 @@ contract Campaign is Ownable, ReentrancyGuard, Pausable {
     uint public requestedAmount;
     uint public amountRemaining;
     address public factoryAddress;
-    CampaignFactory factory; 
+
+    // Limiting contributions to 10 ETH
+    uint constant MAX_LIMIT_FOR_CONTRIB = 10000000000000000000;
+
+    CampaignFactory factory;
 
     mapping(address => uint256) public backers;
     mapping(address => uint256) private ratingFrombackers;
@@ -217,7 +221,7 @@ contract Campaign is Ownable, ReentrancyGuard, Pausable {
     * @dev Modifier to check if deadline has passed and the campaign has reached its goal
     */
     modifier postDeadline() {
-        require(block.timestamp > deadline && amountRaised > goal);
+        require(block.timestamp > deadline && amountRaised >= goal);
         _;
     }
 
@@ -245,8 +249,8 @@ contract Campaign is Ownable, ReentrancyGuard, Pausable {
     /**
     * @dev Payable function recieve funds from backers
     */
-    function contribute() public payable whenNotPaused {
-        require(msg.value > minimumContribution && block.timestamp <= deadline);
+    function contribute() public payable whenNotPaused nonReentrant {
+        require(msg.value > minimumContribution && block.timestamp <= deadline && amountRaised <= MAX_LIMIT_FOR_CONTRIB);
 
         if(backers[msg.sender] == 0) {
             backersCount = backersCount.add(1);            
@@ -262,9 +266,10 @@ contract Campaign is Ownable, ReentrancyGuard, Pausable {
     /**
     * @dev Function to withdraw funds from the campaign
     */
-    function withdraw() public validBacker nonReentrant {
+    function withdraw() external validBacker nonReentrant {
         require(block.timestamp <= deadline || amountRaised < goal || refundFlag);
         uint amountWithdrawn  = backers[msg.sender];
+        backers[msg.sender] = 0;
 
         if(refundFlag) {
             amountWithdrawn = amountWithdrawn.div(amountRaised).mul(amountRemaining);
