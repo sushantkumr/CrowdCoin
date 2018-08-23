@@ -14,10 +14,12 @@ contract('Testing CrowdCoin', async (accounts) => {
 	    factory = await CampaignFactory.new();
 	});
 
+	// Basic test to check if CampaignFactory is deployed
     it("CampaignFactory deployment", async () => {
 	     assert.ok(factory.address);
   });
 
+	// To create a new Campaign and get its address
     it("Create a new Campaign", async () => {
     	let eventDetails = await factory
     	.createCampaign(
@@ -32,6 +34,7 @@ contract('Testing CrowdCoin', async (accounts) => {
 		assert.equal(addressFromEvent, deployedCampaign);
   });
 
+	// To create a new Campaign and check its manager
 	it('Caller as a campaign manager', async () => {
 		let eventDetails = await factory
     	.createCampaign(
@@ -47,6 +50,7 @@ contract('Testing CrowdCoin', async (accounts) => {
 		assert.equal(accounts[0], manager);
 	});
 
+	// To get a list of Ongoing campaigns.
     it("Get ongoing Campaigns", async () => {
     	let eventDetails = await factory
     	.createCampaign(
@@ -66,6 +70,7 @@ contract('Testing CrowdCoin', async (accounts) => {
 		assert.equal(addressFromEvent2, deployedCampaigns[1]);
   });
 
+	// To get a list of Completed campaigns. A delay method has been used to expire the deadline
     it("Get completed Campaigns", async () => {
 		var deadLine = Math.round(Date.now() / 1000) + 2;
 

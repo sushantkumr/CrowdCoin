@@ -6,6 +6,7 @@ Backers can be assured that the money they contribute is used for the right purp
 
 ## Prerequisites
 
+* If you wish to maintain the VM via [Vagrant](https://www.vagrantup.com/downloads.html)
 * [To setup a Virtual Machine in Vagrant](https://gist.github.com/sushantkumr/3fe3cb3507a3d25eeed237065f5ef46e)
 * [MetaMask](https://metamask.io/)
 
