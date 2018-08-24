@@ -10,7 +10,7 @@
 # How to Contribute
 * Go to the Campaign page and enter the minimum amount or more in the Contribute field
 * Click on Contribute and confirm the transaction.
-
+* The page reloads and updates the Campaign information.
 
 # How to create Requests
 # FAQs
