@@ -359,8 +359,8 @@ contract Campaign is Ownable, ReentrancyGuard, Pausable {
     * @dev Retrieve summary of the Campaign
     * @return Multiple parameters of the Campaign
     */
-    function getSummary() public view returns(string, address, uint, uint, uint, string, uint, uint, uint, uint, uint, uint) {
-        return(nameOfCampaign, manager, minimumContribution, deadline, goal, details, amountRaised, address(this).balance, backers[msg.sender], requests.length, rating, backersCount);
+    function getSummary() public view returns(string, address, uint, uint, uint, string, uint, uint, uint, uint, uint) {
+        return(nameOfCampaign, manager, minimumContribution, deadline, goal, details, amountRaised, address(this).balance, requests.length, rating, backersCount);
     }
 
     /**

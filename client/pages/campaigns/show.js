@@ -32,10 +32,9 @@ class CampaignShow extends Component {
 			details: summary[5],
 			amountRaised: summary[6],
 			amountRemaining: summary[7],
-			userContribution: summary[8],
-			requestsCount: summary[9],
-			rating: summary[10],
-			backersCount: summary[11],
+			requestsCount: summary[8],
+			rating: summary[9],
+			backersCount: summary[10],
 			paused: campaignStatus[0],
 			refundFlag:campaignStatus[1],
 			address: props.query.address
@@ -60,7 +59,6 @@ class CampaignShow extends Component {
 			details,
 			amountRaised,
 			amountRemaining,
-			userContribution,
 			requestsCount,
 			rating,
 			backersCount
@@ -88,7 +86,6 @@ class CampaignShow extends Component {
 		  { name: 'Number of Requests', value: requestsCount },
 		  { name: 'Amount Remaining', value: web3.utils.fromWei(amountRemaining, 'ether') + ' ETH' },
 		  { name: 'Number of Backers', value: backersCount },
-		  { name: 'Your Contribution', value: web3.utils.fromWei(userContribution, 'ether') + ' ETH' },
 		  { name: 'Rating of this Campaign', value: (rating != 0 ? rating : 'NA') }
 		];
 

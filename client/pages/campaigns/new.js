@@ -97,7 +97,7 @@ class CampaignNew extends Component {
 										minTime={moment.utc()}
 										maxTime={moment.utc().hours(23).minutes(59)}
 										timeFormat="HH:mm"
-    									timeIntervals={15}
+    									timeIntervals={5}
 									    dateFormat="LLL"
 									    timeCaption="Time"
 										onChange={this.handleChange} 
