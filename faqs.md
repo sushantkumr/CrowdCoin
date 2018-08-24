@@ -9,7 +9,7 @@
 * To find the campaign created by you, click on your address in the Menu bar.
 * In your profile, you can find the Campaign created under `Campaign Creators` and sub menu `Ongoing Campaigns`.
 
-#### How to Contribute
+#### How to contribute to Campaigns
 * Go to the Campaign page and enter the minimum amount or more in the Contribute field
 * Click on Contribute and confirm the transaction.
 * The page reloads and updates the Campaign information.
@@ -31,7 +31,7 @@
 
 #### Who can activate Circuit breaker/Emergency Stop? What operations does it affect?
 * The creator of the Contracts controls the Circuit breaker of the Factory contract. It affects the creation of Campaigns.
-* The creator of the Campaign controls the Circuit breaker of the Campaign. It affects the contribution, creation of requests.
+* The creator of the Campaign controls the Circuit breaker of the Campaign. It affects contribution to Campaigns and creation of requests.
 
 #### When can a backer give rating to the Campaign?
 * After the deadline the backer can rate the Campaign anytime. If the refund is activated then the backer can rate and then withdraw his funds.
