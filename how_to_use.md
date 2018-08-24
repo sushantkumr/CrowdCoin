@@ -8,5 +8,7 @@
 * In your profile, you can find the Campaign created under `Campaign Creators` and sub menu `Ongoing Campaigns`.
 
 # How to Contribute
+* Go to the Campaign page
+
 # How to create Requests
 # FAQs
