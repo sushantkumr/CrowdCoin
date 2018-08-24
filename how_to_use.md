@@ -8,7 +8,9 @@
 * In your profile, you can find the Campaign created under `Campaign Creators` and sub menu `Ongoing Campaigns`.
 
 # How to Contribute
-* Go to the Campaign page
+* Go to the Campaign page and enter the minimum amount or more in the Contribute field
+* Click on Contribute and confirm the transaction.
+
 
 # How to create Requests
 # FAQs
