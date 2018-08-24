@@ -337,6 +337,7 @@ contract Campaign is Ownable, ReentrancyGuard, Pausable {
     * @param index Index of the request for approval
     */    
     function finalizeRequest(uint index) public onlyOwner {
+        require(!refundFlag);
         Request storage request = requests[index];
         require(request.backerCount > (backersCount.div(2)));
         require(!request.complete);

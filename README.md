@@ -10,9 +10,11 @@ Backers can be assured that the money they contribute is used for the right purp
 * [MetaMask](https://metamask.io/).
 * Switch to Rinkeby network in Metamask. Procure some Rinkeby test ETH from the faucet.
 
-## How to set it up
+## How to setup the repo for a local system
 * Clone the repo in your local fill system
 * Traverse to `/client` and run `npm install` in the terminal
 * Run `npm run dev` to start the development server
 * Open either Chrome/Firefox and unlock Metamask
 * Access the DApp from localhost:5001 if in VM (Changed for guest VM) or localhost:3000 if running in host machine
+
+## FAQs can be found [here](faqs.md)
