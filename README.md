@@ -2,7 +2,7 @@
 Decentralized Kickstarter
 
 Raise funds for your project, venture or gig the decentralized way.
-Backers can be assured that the money they contribute is used for the right purpose by approving the usage.
+Backers can be assured that the money they contribute is used for the right purposes by approving the usage.
 Refunds are possible if the manager decides to return the surplus.
 
 This project has been made using [Truffle-Next box](https://github.com/adrianmcli/truffle-next)
@@ -12,7 +12,7 @@ This project has been made using [Truffle-Next box](https://github.com/adrianmcl
 
 ##### Setting up the VM.
 * If you wish to maintain the VM via [Vagrant](https://www.vagrantup.com/downloads.html). To setup a VM in Vagrant and install dependancies of this repo, click [here](https://gist.github.com/sushantkumr/3fe3cb3507a3d25eeed237065f5ef46e). 
-* If you re using VirtualBox to maintain the VM, install the dependancies present in (setup_dev_env.sh)[https://gist.github.com/sushantkumr/3fe3cb3507a3d25eeed237065f5ef46e#file-setup_dev_env-sh] by running the script in a terminal.
+* If you re using VirtualBox to maintain the VM, install the dependancies present in [setup_dev_env.sh](https://gist.github.com/sushantkumr/3fe3cb3507a3d25eeed237065f5ef46e#file-setup_dev_env-sh]) by running the script in a terminal.
 
 ##### Metamask
 * Install the Metamask plugin from [here](https://metamask.io/).
