@@ -1,7 +1,7 @@
 # CrowdCoin
 Decentralized Kickstarter
 
-Raise funds for your project, venture or gig the decentralized way.
+Raise funds for your project or venture the decentralized way.
 Backers can be assured that the money they contribute is used for the right purposes by approving the usage.
 Refunds are possible if the manager decides to return the surplus.
 
@@ -11,8 +11,9 @@ This project has been made using [Truffle-Next box](https://github.com/adrianmcl
 ## Prerequisites
 
 ##### Setting up the VM.
+* If you're using VirtualBox to create the VM, install the dependancies present in [setup_dev_env.sh](https://gist.github.com/sushantkumr/3fe3cb3507a3d25eeed237065f5ef46e#file-setup_dev_env-sh]) by running the script in a terminal.
 * If you wish to maintain the VM via [Vagrant](https://www.vagrantup.com/downloads.html). To setup a VM in Vagrant and install dependancies of this repo, click [here](https://gist.github.com/sushantkumr/3fe3cb3507a3d25eeed237065f5ef46e). 
-* If you re using VirtualBox to maintain the VM, install the dependancies present in [setup_dev_env.sh](https://gist.github.com/sushantkumr/3fe3cb3507a3d25eeed237065f5ef46e#file-setup_dev_env-sh]) by running the script in a terminal.
+
 
 ##### Metamask
 * Install the Metamask plugin from [here](https://metamask.io/).
@@ -22,7 +23,7 @@ This project has been made using [Truffle-Next box](https://github.com/adrianmcl
 ## How to setup the repo for a local system
 * Clone the repo in your local file system
 * Traverse to `/client` and run `npm install` in the terminal
-* Run `npm run dev` to start the development server
+* Run `npm run dev` whilst you're in `/client` to start the development server
 * Open either Chrome/Firefox and unlock Metamask
 * Access the DApp from [localhost:3000](http://localhost:3000/)
 

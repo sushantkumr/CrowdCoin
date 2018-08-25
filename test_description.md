@@ -29,7 +29,7 @@ Checks if the user's contribution qualifies is equal to or more than the minimum
 Manager can create a request to use the funds raised for his Campaign
 
 ##### Test 9 -`Processes requests`
-Manager can process a request once it has been approved by atleast 50% of the backers
+Manager can process a request once it has been approved by more than 50% of the backers
 
 ##### Test 10 -`Withdrawal from a Campaign is allowed`
 Checks if a user is able to withdraw his/her contribution before the deadline
