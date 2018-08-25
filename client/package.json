@@ -10,6 +10,7 @@
     "link-contracts": "cd lib && ln -s ../../build/contracts contracts"
   },
   "dependencies": {
+    "ganache-cli": "^6.1.8",
     "moment": "^2.22.2",
     "next": "^6.1.1",
     "next-routes": "^1.4.2",

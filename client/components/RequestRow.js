@@ -22,12 +22,12 @@ class RequestRow extends Component {
 			await campaign.methods.approveRequest(this.props.id).send({
 				from:accounts[0]
 			});
-			Router.replaceRoute(`/campaigns/${this.props.address}/requests`);			
 		} catch(err) {
 			this.setState({ errorMessageApprove: err.message});
 		}
 
 		this.setState({ loadingApprove: false });
+		Router.replaceRoute(`/campaigns/${this.props.address}/requests`);			
 	};
 
 	onFinalize = async () => {
@@ -39,12 +39,12 @@ class RequestRow extends Component {
 			await campaign.methods.finalizeRequest(this.props.id).send({
 				from:accounts[0]
 			});
-			Router.replaceRoute(`/campaigns/${this.props.address}/requests`);
 		} catch(err) {
 			this.setState({ errorMessageFinalize: err.message});
 		}
 
 		this.setState({ loadingFinalize: false });
+		Router.replaceRoute(`/campaigns/${this.props.address}/requests`);
 	};
 
 	render() {

@@ -50,10 +50,7 @@ class CampaignIndex extends Component {
 
 	async componentDidMount() {
 		const accounts = await web3.eth.getAccounts();
-		console.log(accounts[0]);
 		this.setState({ accounts });
-
-		console.log(this.state.accounts[0] == this.props.owner);
 	}
 
 	renderCompletedCampaigns() {

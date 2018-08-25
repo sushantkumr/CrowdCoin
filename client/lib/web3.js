@@ -14,7 +14,7 @@ if (typeof window !== 'undefined' && typeof window.web3 !== 'undefined') {
 
   const provider = new HDWalletProvider(
 	'scout sort custom elite radar rare vivid thing trophy gesture cover snake change narrow kite list nation sustain buffalo erode open balance system young',
-	 'https://rinkeby.infura.io/Lr1n4jxK5ZjOyMUPnyNw'
+	 'https://rinkeby.infura.io/v3/3c206e4a36fb4a40b1e50815bc44c789'
 );
 
   	web3 = new Web3(provider);
