@@ -18,3 +18,6 @@ Every campaign has a restriction of 10 ETH in order to limit the amount of risk.
 
 ### SafeMath
 Safe math prevents overflow and underflow in mathematical operations in both CampaignFactory and Campaign.
+
+### Pull over Push for Withdrawals
+The contract has made use of Pull over Push for withdrawal in order to shift the risk associated with transferring ETH to the user.

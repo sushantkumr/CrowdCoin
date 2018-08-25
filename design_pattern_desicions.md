@@ -5,3 +5,6 @@ Factory Design Pattern has been chosen to design the smart contract because crea
 
 ### Circuit breaker/Emergency Stop
 There can be instances where the need to stop operations can arise, either due to onchain or offchain issues. Whatever the reason be, there must be a switch to protect the funds or prevent the infusion of more in campaigns. Hence the need for for a Circuit breaker. This has been implemented in both the CampaignFactory and Campaign contracts to control the ETH which could flow into them.
+
+### Pull over Push for Withdrawals
+The contract has made use of Pull over Push for withdrawal in order to shift the risk associated with transferring ETH to the user.
