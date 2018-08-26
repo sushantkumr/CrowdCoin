@@ -87,7 +87,7 @@ contract('Testing CrowdCoin', async (accounts) => {
     	addressFromEvent2 = eventDetails['logs'][1]['args']['campaignAddress'];
 
     	// To cause some delay and lapse the deadline of the created campaigns
-		await timeout(4000);
+		await timeout(5000);
 
 		let deployedCampaigns = await factory.getCampaigns('0x0000000000000000000000000000000000000000', 0);
 		await (deployedCampaigns = deployedCampaigns[1]);
@@ -149,7 +149,7 @@ contract('Testing CrowdCoin', async (accounts) => {
     		value: 100000000000000000,
     	});
 
-		await timeout(4000);
+		await timeout(5000);
 
     	await campaign.createRequest('Buy batteries', '10000000000', accounts[1]);
 		const request = await campaign.requests(0);
@@ -169,7 +169,7 @@ contract('Testing CrowdCoin', async (accounts) => {
     		value: web3.toWei('10', 'ether',)
     	});
 
-		await timeout(4000);
+		await timeout(5000);
 
     	await campaign.createRequest('Buy batteries', web3.toWei('5', 'ether'), accounts[1]);
 		const request = await campaign.requests(0);
@@ -216,7 +216,7 @@ contract('Testing CrowdCoin', async (accounts) => {
 
 	    	campaign = await Campaign.at(addressFromEvent);
 
-			await timeout(4000);
+			await timeout(5000);
 
 	    	await campaign.contribute({
 	    		from: accounts[0],
@@ -245,7 +245,7 @@ contract('Testing CrowdCoin', async (accounts) => {
 	    		value: 10000000000,
 	    	});
 
-			await timeout(4000);
+			await timeout(5000);
 
 	    	await campaign.createRequest('Buy batteries', '10000000000', accounts[1]);
 	    	assert(false);
@@ -271,7 +271,7 @@ contract('Testing CrowdCoin', async (accounts) => {
     		value: web3.toWei('10', 'ether',)
     	});
 
-		await timeout(4000);
+		await timeout(5000);
 
 		await campaign.refundBackerFunds();
     	await campaign.withdraw();

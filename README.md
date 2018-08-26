@@ -27,7 +27,6 @@ This project has been made using [Truffle-Next box](https://github.com/adrianmcl
 * Run `npm run dev` whilst you're in `/client` to start the development server
 * Open either Chrome/Firefox and unlock Metamask
 * Access the DApp from [localhost:3000](http://localhost:3000/)
-* 
 
 ## FAQs can be found [here](faqs.md)
 
