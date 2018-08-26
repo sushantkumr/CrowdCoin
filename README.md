@@ -10,9 +10,8 @@ This project has been made using [Truffle-Next box](https://github.com/adrianmcl
 
 ## Prerequisites
 
-##### Setting up the VM.
+##### Setting up the VM (for Ubuntu 16.04 with atleast 4 GB of RAM)
 * If you're using VirtualBox to create the VM, install the dependancies present in [setup_dev_env.sh](https://gist.github.com/sushantkumr/3fe3cb3507a3d25eeed237065f5ef46e#file-setup_dev_env-sh]) by running the script in a terminal.
-* If you wish to maintain the VM via [Vagrant](https://www.vagrantup.com/downloads.html). To setup a VM in Vagrant and install dependancies of this repo, click [here](https://gist.github.com/sushantkumr/3fe3cb3507a3d25eeed237065f5ef46e). 
 
 
 ##### Metamask
