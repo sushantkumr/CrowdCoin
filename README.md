@@ -21,12 +21,15 @@ This project has been made using [Truffle-Next box](https://github.com/adrianmcl
 
 
 ## How to setup the repo for a local system
+* Once inside the VM and installed the dependancies from [here](https://github.com/sushantkumr/CrowdCoin#setting-up-the-vm) follow the steps listed below
 * Clone the repo in your local file system
 * Traverse to `/client` and run `npm install` in the terminal
 * Run `npm run dev` whilst you're in `/client` to start the development server
 * Open either Chrome/Firefox and unlock Metamask
 * Access the DApp from [localhost:3000](http://localhost:3000/)
+* 
 
 ## FAQs can be found [here](faqs.md)
 
 ## Tests are explained [here](test_description.md)
+* Tests can be run be inside the truffle console `truffle develop` and then executing `test`.
