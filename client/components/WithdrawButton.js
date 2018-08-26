@@ -37,7 +37,7 @@ class WithdrawButton extends Component {
 		return (
 			<Container>
 				<Segment basic>
-					<Button fluid loading={this.state.loading} floated="right" content="Withdraw" icon='minus circle' labelPosition='right' color='green' onClick={this.withdraw}/>
+					<Button fluid loading={this.state.loading} floated="right" content="Withdraw your contribution" icon='minus circle' labelPosition='right' color='green' onClick={this.withdraw}/>
 					<Divider hidden />
 				</Segment>
 					<Message error header="Oops !" hidden={!this.state.errorMessage || !this.state.successMessage} content={this.state.errorMessage || this.state.successMessage} />
