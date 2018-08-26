@@ -3,8 +3,8 @@ const Web3 = require('web3');
 const factory = require('./lib/contracts/CampaignFactory.json');
 
 const provider = new HDWalletProvider(
-	'invest giraffe energy size lottery kitchen strategy shoe time hockey follow ritual',
-	 'https://rinkeby.infura.io/Lr1n4jxK5ZjOyMUPnyNw'
+	'MNEMONIC_PHRASE_HERE',
+	 'https://rinkeby.infura.io/TOKEN'
 );
 
 const web3 = new Web3(provider);

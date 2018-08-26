@@ -32,3 +32,5 @@ This project has been made using [Truffle-Next box](https://github.com/adrianmcl
 
 ## Tests are explained [here](test_description.md)
 * Tests can be run be inside the truffle console `truffle develop` and then executing `test`.
+
+## If you wish to change ownership of the Factory contract, check [this](change_ownership_of_factory.md)
