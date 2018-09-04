@@ -20,7 +20,7 @@ This project has been made using [Truffle-Next box](https://github.com/adrianmcl
 
 
 ## How to setup the repo for a local system
-* Once you're inside the VM and have installed the dependancies from [here](https://github.com/sushantkumr/CrowdCoin#setting-up-the-vm) follow the steps listed below
+* Once you're inside the VM and have installed the dependancies from [here](https://github.com/sushantkumr/CrowdCoin#setting-up-the-vm-for-ubuntu-1604-with-atleast-4-gb-of-ram) follow the steps listed below
 * Clone the repo in your local file system
 * Traverse to `/client` and run `npm install` in the terminal
 * Run `npm run dev` whilst you're in `/client` to start the development server
